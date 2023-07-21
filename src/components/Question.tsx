@@ -18,7 +18,7 @@ const Question: React.FC<QuestionProps> = ({
 
     return (
         <div>
-            <h2 className="text-4xl font-bold mb-10 text-white">{question}</h2>
+            <h2 className="text-4xl font-bold mb-10 text-white" dangerouslySetInnerHTML={{ __html: question }}  ></h2>
             <ul >
                 {options.map((option) => (
                     <Option
