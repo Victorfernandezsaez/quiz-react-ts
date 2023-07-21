@@ -3,7 +3,7 @@ export interface Category {
     name: string;
 }
 
-// export interface CategoryCount {
+// export interface Category {
 //     category_id: number;
 //     category_question_count: {
 //         total_question_count: number;

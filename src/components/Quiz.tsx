@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import Question from './Question';
 import Result from './Result';
 
@@ -16,6 +16,8 @@ const Quiz: React.FC = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const { numQuestions, difficulty, questionType, category } = location.state;
 
     const handleOptionSelect = (selectedOption: string) => {
         const currentQuestion = questions[currentQuestionIndex];
@@ -32,10 +34,21 @@ const Quiz: React.FC = () => {
     };
 
     useEffect(() => {
+        console.log('numQuestions:', numQuestions);
+        console.log('difficulty:', difficulty);
+        console.log('questionType:', questionType);
+        console.log('category:', category);
+
         const fetchQuestions = async () => {
             try {
-                const response = await axios.get('https://opentdb.com/api.php?amount=10');
+                const apiUrl = `https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}&type=${questionType}`
+
+                console.log('API URL:', apiUrl);
+
+                const response = await axios.get(apiUrl);
                 const data = response.data.results;
+                console.log('Fetched questions:', data);
+
                 const formattedQuestions = data.map((question: any) => ({
                     question: question.question,
                     options: [...question.incorrect_answers, question.correct_answer],
@@ -48,7 +61,8 @@ const Quiz: React.FC = () => {
         };
 
         fetchQuestions();
-    }, []);
+    }, [numQuestions, difficulty, questionType, category]);
+    console.log('questions:', questions);
 
     if (questions.length === 0) {
         return <div>Loading...</div>;
